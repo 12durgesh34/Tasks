@@ -16,7 +16,7 @@ mysql --version
 ```
 
 
-## 🖥️ 2. Configure MySQL Root User
+## 🖥️ 2. Configure MySQL Root User on both (Primary and Secondaries)
 Login into MySQL:
 ```
 sudo mysql
@@ -54,7 +54,7 @@ Switching to mysql_native_password ensures compatibility with MySQL Shell and Gr
 
 ---
 
-## 3. Configure MySQL (mysqld.cnf)
+## 3. Configure MySQL (mysqld.cnf) on both (Primary and Secondaries)
 
 ### Edit the MySQL config file:
 ```
@@ -114,6 +114,10 @@ max_connections = 500
 
 `report_host` → The actual IP of the node (must be correct).
 
+>
+>Note: `server-id`  `report_host` `loose-group_replication_local_address` will change on every nodes
+>
+
 ---
 
 ## 4. Restart MySQL
@@ -124,6 +128,13 @@ sudo systemctl restart mysql
 sudo systemctl status mysql
 
 ```
+
+>
+> whenever you updated the `/etc/mysql/mysql.conf.d/mysqld.cnf` , make sure you restart the mysql
+>
+>
+
+---
 
 ## 5. Verify Ports (optional)
 
@@ -141,7 +152,7 @@ Both must be open for the cluster to work.
 
 ---
 
-## 6. Install MySQL Shell
+## 6. Install MySQL Shell on Primary Node
 
 ```
 sudo apt install -y mysql-shell

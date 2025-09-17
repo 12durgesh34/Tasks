@@ -141,7 +141,7 @@ Both must be open for the cluster to work.
 
 ---
 
-7. Create Cluster on Primary 6. Install MySQL Shell
+## 6. Install MySQL Shell
 
 ```
 sudo apt install -y mysql-shell

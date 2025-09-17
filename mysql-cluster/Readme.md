@@ -125,7 +125,7 @@ sudo systemctl status mysql
 
 ```
 
-## 5. Verify Ports
+## 5. Verify Ports (optional)
 
 ```
 sudo lsof -i :3306

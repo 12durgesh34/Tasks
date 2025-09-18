@@ -102,5 +102,50 @@ scp -i /home/ubuntu/mysql.pem /backup/mysql-backup.tar.gz ubuntu@<slave_ip>:/tmp
 
 ```bash
 sudo systemctl stop mysql
-sudo
+sudo rm -rf /var/lib/mysql
+cd /tmp
+tar -xvzf mysql-backup.tar.gz
+sudo mv mysql/* /var/lib/mysql/
+sudo chown -R mysql:mysql /var/lib/mysql
+sudo systemctl start mysql
 ```
+
+## 8. Configure Slave replication
+
+```bash
+sudo mysql
+```
+
+```sql
+STOP SLAVE;
+RESET SLAVE ALL;
+
+CHANGE MASTER TO
+  MASTER_HOST='172.31.100.18',
+  MASTER_USER='repl',
+  MASTER_PASSWORD='ReplPass123!',
+  MASTER_AUTO_POSITION=1;
+
+START SLAVE;
+SHOW SLAVE STATUS\G
+```
+
+## 9. Verify replication
+
+```sql
+SHOW MASTER STATUS\G
+SHOW SLAVE STATUS\G
+```
+
+Check that:
+
+* `Slave_IO_Running: Yes`
+* `Slave_SQL_Running: Yes`
+* `Seconds_Behind_Master: 0`
+
+## 10. Notes / Best Practices
+
+* Open **port 3306** between master and slave.
+* Set `bind-address=0.0.0.0` on both nodes.
+* Use **GTID replication** for automatic failover.
+* Test backup and restore on slave before configuring replication.

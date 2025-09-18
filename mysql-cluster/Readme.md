@@ -192,8 +192,7 @@ cluster.status()
 
 From the Primary node MySQL Shell:
 ```
-cluster.add_instance('root@172.31.100.51:3306')
-cluster.add_instance('root@172.31.100.69:3306')
+cluster.add_instance('root@<private-ip-of-the-server:3306')
 cluster.status()
 ```
 #### 🔎 Explanation:
@@ -217,6 +216,14 @@ cluster.set_primary_instance("172.31.100.16:3306")
 Ensures automatic failover and manual promotion are supported.
 
 ## 10. Verify Cluster Members
+
+>
+>`\quit` from  MySQL Shell and fire the commands given below
+>
+
+```
+sudo mysql -u root -p
+```
 ```
 SELECT MEMBER_HOST, MEMBER_PORT, MEMBER_ROLE
 FROM performance_schema.replication_group_members;
@@ -265,4 +272,17 @@ Creates a testdb database and a cluster_test table.
 Inserts a new row with a timestamp every 2 seconds.
 
 Used to verify replication across all nodes.
+
+---
+
+### Run the script
+
+```
+chmod +x datagenerator.sh
+```
+
+```
+./datagenerator.sh
+
+```
 

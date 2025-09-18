@@ -113,7 +113,7 @@ sudo systemctl start mysql
 ## 8. Configure Slave replication
 
 ```bash
-sudo mysql
+sudo mysql -u root -p
 ```
 
 ```sql

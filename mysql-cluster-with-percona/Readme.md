@@ -126,14 +126,17 @@ scp -i /home/ubuntu/mysql.pem /backup/mysql-backup.tar.gz ubuntu@<slave_ip>:/tmp
 
 ```bash
 sudo systemctl stop mysql
-sudo rm -rf /var/lib/mysql
-cd /tmp
+sudo rm -rf /var/lib/mysql/*
 sudo mkdir -p /var/lib/mysql
 sudo chown -R mysql:mysql /var/lib/mysql
 sudo chmod 750 /var/lib/mysql
-sudo tar -xvzf mysql-backup.tar.gz
-sudo mv mysql/* /var/lib/mysql/
+sudo cp -a /tmp/mysql/* /var/lib/mysql/
 sudo chown -R mysql:mysql /var/lib/mysql
+sudo chmod 750 /var/lib/mysql
+sudo -u mysql touch /var/lib/mysql/mysql-bin.index
+sudo chown mysql:mysql /var/lib/mysql/mysql-bin.index
+sudo chmod 640 /var/lib/mysql/mysql-bin.index
+sudo systemctl start mysql
 ```
 
 ### 7a. Recreate the binary log index to prevent startup errors

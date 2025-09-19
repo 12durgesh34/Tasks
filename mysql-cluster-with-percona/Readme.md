@@ -42,8 +42,7 @@ sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
 ```
 
 ```ini
-bind-address = 0.0.0.0
-mysqlx-bind-address = 0.0.0.0
+
 
 [mysqld]
 server-id=1
@@ -72,8 +71,7 @@ sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
 ```
 
 ```ini
-bind-address = 0.0.0.0
-mysqlx-bind-address = 0.0.0.0
+
 
 [mysqld]
 server-id=2

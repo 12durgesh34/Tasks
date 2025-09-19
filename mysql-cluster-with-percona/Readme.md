@@ -29,7 +29,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'RootPass
 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'RootPass123!';
 FLUSH PRIVILEGES;
 
--- Replication user for slave connection
+-- Replication user for slave connection (on primary)
 CREATE USER 'repl'@'%' IDENTIFIED WITH mysql_native_password BY 'ReplPass123!';
 GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%';
 FLUSH PRIVILEGES;

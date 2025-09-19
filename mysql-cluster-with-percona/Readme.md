@@ -104,6 +104,8 @@ scp -i /home/ubuntu/mysql.pem /backup/mysql-backup.tar.gz ubuntu@<slave_ip>:/tmp
 sudo systemctl stop mysql
 sudo rm -rf /var/lib/mysql
 cd /tmp
+sudo mkdir -p /var/lib/mysql
+sudo chown -R mysql:mysql /var/lib/mysql
 tar -xvzf mysql-backup.tar.gz
 sudo mv mysql/* /var/lib/mysql/
 sudo chown -R mysql:mysql /var/lib/mysql

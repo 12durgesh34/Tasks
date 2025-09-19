@@ -186,3 +186,9 @@ Check that:
 * Ensure `/var/lib/mysql` exists and has correct ownership (`mysql:mysql`) before starting MySQL.
 * If binary logs are enabled, always create `mysql-bin.index` manually if missing.
 * Test backup and restore on slave before configuring replication.
+
+### MMA
+```
+ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R "172.31.100.25"
+
+```

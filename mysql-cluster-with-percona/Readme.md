@@ -4,7 +4,7 @@ This README explains how to set up a **MySQL master-slave replication cluster** 
 
 ---
 
-## 1. Install MySQL on both nodes
+## 1. Install MySQL on both (primary + secondary)
 
 ```bash
 sudo apt update
@@ -19,12 +19,12 @@ sudo mysql
 ```
 
 ```sql
--- Root user with remote access
+-- Root user with remote access (primary + secondary)
 CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY 'RootPass123!';
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 
--- Ensure localhost root uses native password
+-- Ensure localhost root uses native password (primary + secondary)
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'RootPass123!';
 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'RootPass123!';
 FLUSH PRIVILEGES;
@@ -86,7 +86,7 @@ binlog_transaction_dependency_tracking=WRITESET
 binlog_checksum=NONE
 ```
 
-## 4. Install Percona XtraBackup
+## 4. Install Percona XtraBackup on both (primary + secondary)
 
 ```bash
 wget https://repo.percona.com/apt/percona-release_latest.generic_all.deb
@@ -179,14 +179,7 @@ Check that:
 * `Slave_SQL_Running: Yes`
 * `Seconds_Behind_Master: 0`
 
-## 10. Notes / Best Practices
 
-* Open **port 3306** between master and slave.
-* Set `bind-address=0.0.0.0` on both nodes.
-* Use **GTID replication** for automatic failover.
-* Ensure `/var/lib/mysql` exists and has correct ownership (`mysql:mysql`) before starting MySQL.
-* If binary logs are enabled, always create `mysql-bin.index` manually if missing.
-* Test backup and restore on slave before configuring replication.
 
 ### MMA
 ```

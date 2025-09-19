@@ -181,7 +181,7 @@ Check that:
 
 
 
-### MMA
+### for MMA while ssh (when MMA error occurs)
 ```
 ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R "172.31.100.25"
 

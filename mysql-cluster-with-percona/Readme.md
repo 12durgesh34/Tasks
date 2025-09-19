@@ -65,6 +65,29 @@ sudo systemctl restart mysql
 sudo systemctl status mysql
 ```
 
+### 3a. Configure MySQL server (Slave)
+
+```bash
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+```
+
+```ini
+bind-address = 0.0.0.0
+mysqlx-bind-address = 0.0.0.0
+
+[mysqld]
+server-id=2
+log_bin=mysql-bin
+binlog_format=ROW
+gtid_mode=ON
+enforce_gtid_consistency=ON
+master_info_repository=TABLE
+relay_log_info_repository=TABLE
+log_slave_updates=ON
+binlog_transaction_dependency_tracking=WRITESET
+binlog_checksum=NONE
+```
+
 ## 4. Install Percona XtraBackup
 
 ```bash
@@ -81,6 +104,7 @@ sudo apt install percona-xtrabackup-80 -y
 sudo mkdir -p /backup/mysql
 sudo chown -R mysql:mysql /backup/mysql
 sudo xtrabackup --backup --target-dir=/backup/mysql --user=root --password='RootPass123!'
+sudo xtrabackup --prepare --target-dir=/backup/mysql
 ```
 
 ## 6. Transfer backup to Slave
@@ -106,10 +130,19 @@ sudo rm -rf /var/lib/mysql
 cd /tmp
 sudo mkdir -p /var/lib/mysql
 sudo chown -R mysql:mysql /var/lib/mysql
-tar -xvzf mysql-backup.tar.gz
+sudo chmod 750 /var/lib/mysql
+sudo tar -xvzf mysql-backup.tar.gz
 sudo mv mysql/* /var/lib/mysql/
 sudo chown -R mysql:mysql /var/lib/mysql
+```
+
+### 7a. Recreate the binary log index to prevent startup errors
+
+```bash
+sudo -u mysql touch /var/lib/mysql/mysql-bin.index
+sudo chown mysql:mysql /var/lib/mysql/mysql-bin.index
 sudo systemctl start mysql
+sudo systemctl status mysql
 ```
 
 ## 8. Configure Slave replication
@@ -123,7 +156,7 @@ STOP SLAVE;
 RESET SLAVE ALL;
 
 CHANGE MASTER TO
-  MASTER_HOST='172.31.100.18',
+  MASTER_HOST='<master_ip>',
   MASTER_USER='repl',
   MASTER_PASSWORD='ReplPass123!',
   MASTER_AUTO_POSITION=1;
@@ -150,4 +183,6 @@ Check that:
 * Open **port 3306** between master and slave.
 * Set `bind-address=0.0.0.0` on both nodes.
 * Use **GTID replication** for automatic failover.
+* Ensure `/var/lib/mysql` exists and has correct ownership (`mysql:mysql`) before starting MySQL.
+* If binary logs are enabled, always create `mysql-bin.index` manually if missing.
 * Test backup and restore on slave before configuring replication.
